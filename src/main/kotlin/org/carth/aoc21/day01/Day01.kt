@@ -2,33 +2,41 @@ package org.carth.aoc21.day01
 
 import org.carth.aoc21.common.Puzzle
 
-class Day01(data : List<Int>) : Puzzle<Int, Int>() {
+class Day01(private val data : List<Int>) : Puzzle<Int, Int>() {
 
-    private val input = data.sorted()
-
-    override fun solvePartOne(): Int {
-        return input.mapIndexedNotNull { idx, a ->
-            input
-                .drop(idx + 1)
-                .dropWhile { a + it < 2020 }
-                .take(1)
-                .firstOrNull { a + it == 2020 }
-                ?.let { a * it }
-        }.first()
+   override fun solvePartOne(): Int {
+        return data
+            .zipWithNext()
+            .filter { (a,b) -> a < b }
+            .size
     }
 
     override fun solvePartTwo(): Int {
-        return input.mapIndexedNotNull { aIdx, a ->
-            input
-                .drop(aIdx + 1)
-                .mapIndexedNotNull { bIdx, b ->
-                    input
-                        .drop(bIdx + 1)
-                        .dropWhile { a + b + it < 2020 }
-                        .take(1)
-                        .firstOrNull { a + b + it == 2020 }
-                        ?.let { a * b * it }
-                }.firstOrNull()
-        }.first()
+        return data.zipWithTriple()
+            .map { triple -> triple.first + triple.second + triple.third }
+            .zipWithNext()
+            .filter { (a, b) -> a < b }
+            .size
     }
+}
+
+inline fun <T, R> Iterable<T>.zipWithTriple(transform: (a: T, b: T, c:T) -> R): List<R> {
+    val iterator = iterator()
+    if (!iterator.hasNext()) return emptyList()
+    val result = mutableListOf<R>()
+    var current = iterator.next()
+    if (iterator.hasNext()) {
+        var next = iterator.next()
+        while (iterator.hasNext()) {
+                val next2 = iterator.next()
+                result.add(transform(current, next, next2))
+                current = next
+                next = next2
+        }
+    }
+    return result
+}
+
+fun <T> Iterable<T>.zipWithTriple(): List<Triple<T, T, T>> {
+    return zipWithTriple { a, b, c -> Triple(a,b,c) }
 }
