@@ -7,11 +7,11 @@ class Day02(private val data: List<String>) : Puzzle<Int, Int>() {
         var horizontal = 0
         var depth = 0
         data.forEach {
-            val (command, delta) = Pair(it.substringBefore(' ').trim(), it.substringAfter(' ').trim().toInt())
-            when {
-                command.startsWith("f") -> horizontal += delta
-                command.startsWith("d") -> depth += delta
-                command.startsWith("u") -> depth -= delta
+            val (command, delta) = it.split(" ").let { it[0] to it[1].toInt() }
+            when (command) {
+                "forward" -> horizontal += delta
+                "down" -> depth += delta
+                "up" -> depth -= delta
             }
         }
         return horizontal * depth
@@ -22,14 +22,14 @@ class Day02(private val data: List<String>) : Puzzle<Int, Int>() {
         var depth = 0
         var aim = 0
         data.forEach {
-            val (command, delta) = Pair(it.substringBefore(' ').trim(), it.substringAfter(' ').trim().toInt())
-            when {
-                command.startsWith("f") -> {
+            val (command, delta) = it.split(" ").let { it[0] to it[1].toInt() }
+            when (command) {
+                "forward" -> {
                     horizontal += delta
-                    depth += (aim * delta)
+                    depth += aim * delta
                 }
-                command.startsWith("d") -> aim += delta
-                command.startsWith("u") -> aim -= delta
+                "down" -> aim += delta
+                "up" -> aim -= delta
             }
         }
         return horizontal * depth

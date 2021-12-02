@@ -12,7 +12,8 @@ tasks {
     }
 }
 dependencies {
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.6.0")
+    testImplementation(platform("org.junit:junit-bom:5.8.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 tasks.test {

@@ -1,46 +1,50 @@
 package org.carth.aoc21.day02
 
-import org.carth.aoc21.common.Resources
+import org.carth.aoc21.common.Resources.resourceAsListOfString
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
 class Day02Test {
-    internal class Day02PartOneTest {
+
+    @Nested
+    inner class Day02PartOneTest {
 
         @Test
-        fun solveSamplePartOne() {
+        fun `solve part one sample`() {
             // Act
-            val answer = Day02(Resources.resourceAsListOfString("day02_test.txt")).solvePartOne()
+            val answer = Day02(resourceAsListOfString("day02_test.txt")).solvePartOne()
 
             // Assert
             assertEquals(answer, 150)
         }
 
         @Test
-        fun solvePartOne() {
+        fun `solve part one`() {
             // Act
-            val answer = Day02(Resources.resourceAsListOfString("day02.txt")).solvePartOne()
+            val answer = Day02(resourceAsListOfString("day02.txt")).solvePartOne()
 
             // Assert
             assertEquals(answer, 1693300)
         }
     }
 
-    internal class Day02PartTwoTest {
+    @Nested
+    inner class Day02PartTwoTest {
 
         @Test
-        fun solveSamplePartTwo() {
+        fun `solve part two sample`() {
             // Act
-            val answer = Day02(Resources.resourceAsListOfString("day02_test.txt")).solvePartTwo()
+            val answer = Day02(resourceAsListOfString("day02_test.txt")).solvePartTwo()
 
             // Assert
             assertEquals(answer, 900)
         }
 
         @Test
-        fun solvePartTwo() {
+        fun `solve part two`() {
             // Act
-            val answer = Day02(Resources.resourceAsListOfString("day02.txt")).solvePartTwo()
+            val answer = Day02(resourceAsListOfString("day02.txt")).solvePartTwo()
             // Assert
             assertEquals(answer, 1857958050)
         }
