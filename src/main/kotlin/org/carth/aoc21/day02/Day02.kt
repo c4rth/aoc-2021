@@ -3,11 +3,14 @@ package org.carth.aoc21.day02
 import org.carth.aoc21.common.Puzzle
 
 class Day02(private val data: List<String>) : Puzzle<Int, Int>() {
+
+    private fun getCommandDelta(line: String) = line.split(" ").let { it[0] to it[1].toInt() }
+
     override fun solvePartOne(): Int {
         var horizontal = 0
         var depth = 0
         data.forEach {
-            val (command, delta) = it.split(" ").let { it[0] to it[1].toInt() }
+            val (command, delta) = getCommandDelta(it)
             when (command) {
                 "forward" -> horizontal += delta
                 "down" -> depth += delta
@@ -22,7 +25,7 @@ class Day02(private val data: List<String>) : Puzzle<Int, Int>() {
         var depth = 0
         var aim = 0
         data.forEach {
-            val (command, delta) = it.split(" ").let { it[0] to it[1].toInt() }
+            val (command, delta) = getCommandDelta(it)
             when (command) {
                 "forward" -> {
                     horizontal += delta
