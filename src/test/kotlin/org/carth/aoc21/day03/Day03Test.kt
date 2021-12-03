@@ -2,6 +2,7 @@ package org.carth.aoc21.day03
 
 import org.carth.aoc21.common.Resources.resourceAsListOfString
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -12,6 +13,7 @@ class Day03Tests {
 
         @Test
         fun `solve part one of sample`() {
+
             // Act
             val answer = Day03(resourceAsListOfString("day03_test.txt")).solvePartOne()
 
@@ -20,6 +22,7 @@ class Day03Tests {
         }
 
         @Test
+        @Disabled
         fun `solve part one`() {
             // Act
             val answer = Day03(resourceAsListOfString("day03.txt")).solvePartOne()
