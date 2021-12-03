@@ -12,6 +12,7 @@ class Day01Test {
 
         @Test
         fun `solve part one sample`() {
+
             // Act
             val answer = Day01(resourceAsListOfInt("day01_test.txt")).solvePartOne()
 
