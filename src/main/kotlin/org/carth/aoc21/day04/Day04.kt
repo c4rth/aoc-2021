@@ -1,48 +1,35 @@
 package org.carth.aoc21.day04
 
 import org.carth.aoc21.common.Puzzle
-import org.carth.aoc21.day03.Card
+import org.carth.aoc21.day03.Grid
 
 class Day04(private val data: List<String>) : Puzzle<Int, Int>() {
 
-    private val gridSize = 5
-
-    private fun getCards() : List<Card> {
-        val cards = mutableListOf<Card>()
-        var index = 2
-        while (index < data.size) {
-            val line = StringBuilder()
-            for (index2 in 0..4) {
-                line.append(data[index + index2]).append(" ")
-            }
-            Card(gridSize).let { bingo ->
-                bingo.setNumbers(line.toString().replace("  ", " ").trim().split(" "))
-                cards.add(bingo)
-            }
-            index += 6
+    private fun getGrids(): List<Grid> =
+        data.drop(1).chunked(6).map { list ->
+            Grid(list.takeLast(5))
         }
-        return cards
-    }
 
     override fun solvePartOne(): Int {
         val draws = data.first().split(",").map { s: String -> s.toInt() }
-        val cards = getCards()
-        var winner: Card? = null
+        val grids = getGrids()
+        var winner: Grid? = null
         var indexDraw = 0
-        println("card size : ${cards.size}")
-        while (null == winner && indexDraw < draws.size) {
-            cards.forEach {
-                it.checkNumber(draws[indexDraw])
+        println("card size : ${grids.size}")
+        for (index in draws.indices) {
+            grids.forEach { grid ->
+                grid.checkNumber(draws[index])
             }
-            winner = cards.firstOrNull { card -> card.isWinner }
-            if (null == winner) {
-                indexDraw++
+            winner = grids.firstOrNull { card -> card.isWinner() }
+            if (winner != null) {
+                indexDraw = index
+                break
             }
         }
         if (null != winner) {
             println("Winner found")
-            println(winner.cardNumbers)
-            println("${draws[indexDraw]} ${winner.sumOfNonChecked}")
+            println(winner)
+            println("result = ${draws[indexDraw]} * ${winner.sumOfNonChecked}")
             return draws[indexDraw] * winner.sumOfNonChecked
         }
         return 0
@@ -50,36 +37,31 @@ class Day04(private val data: List<String>) : Puzzle<Int, Int>() {
 
     override fun solvePartTwo(): Int {
         val draws = data.first().split(",").map { s: String -> s.toInt() }
-        val cards = getCards()
+        val grids = getGrids()
         var numberOfWinners = 0
         var indexDraw = 0
-        println("card size : ${cards.size}")
-        while (numberOfWinners < cards.size && indexDraw < draws.size) {
-            cards.forEach {
-                it.checkNumber(draws[indexDraw])
+        println("card size : ${grids.size}")
+        for (index in draws.indices) {
+            grids.forEach {
+                it.checkNumber(draws[index])
             }
-            numberOfWinners = 0
-            cards.forEach { card ->
-                if (card.isWinner) {
-                    card.indexWinnerDraw = indexDraw
-                    numberOfWinners++
-                }
-            }
-            if (numberOfWinners < cards.size) {
-                indexDraw++
+            numberOfWinners = grids.filter { card ->
+                card.isWinnerWithDrawIndex(index)
+            }.size
+            if (numberOfWinners == grids.size) {
+                indexDraw = index
+                break
             }
         }
-        println("numberOfWinners : $numberOfWinners of ${cards.size}")
-        if (numberOfWinners == cards.size) {
-            val lastWinner = cards.firstOrNull { card ->
+        println("numberOfWinners : $numberOfWinners of ${grids.size}")
+        if (numberOfWinners == grids.size) {
+            val lastWinner = grids.first { card ->
                 card.indexWinnerDraw == indexDraw
             }
-            if (null != lastWinner) {
-                println("Last winner found")
-                println(lastWinner.cardNumbers)
-                println("${draws[indexDraw]} ${lastWinner.sumOfNonChecked}")
-                return draws[indexDraw] * lastWinner.sumOfNonChecked
-            }
+            println("Last winner found")
+            println(lastWinner)
+            println("result = ${draws[indexDraw]} * ${lastWinner.sumOfNonChecked}")
+            return draws[indexDraw] * lastWinner.sumOfNonChecked
         }
         return 0
     }
