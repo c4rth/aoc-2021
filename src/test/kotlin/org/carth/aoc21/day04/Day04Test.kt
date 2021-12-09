@@ -22,7 +22,7 @@ class Day04Tests {
             val answer = Day04(resourceAsListOfString("day04_test.txt")).solvePartOne()
 
             // Assert
-            assertEquals(answer, 4512)
+            assertEquals( 4512, answer)
         }
 
         @Test
@@ -32,7 +32,7 @@ class Day04Tests {
             val answer = Day04(resourceAsListOfString("day04.txt")).solvePartOne()
 
             // Assert
-            assertEquals(answer, 6592)
+            assertEquals( 6592, answer)
         }
     }
 
@@ -48,7 +48,7 @@ class Day04Tests {
             val answer = Day04(resourceAsListOfString("day04_test.txt")).solvePartTwo()
 
             // Assert
-            assertEquals(answer, 1924)
+            assertEquals( 1924, answer)
         }
 
         @Test
@@ -57,7 +57,7 @@ class Day04Tests {
             // Act
             val answer = Day04(resourceAsListOfString("day04.txt")).solvePartTwo()
             // Assert
-            assertEquals(answer, 31755)
+            assertEquals( 31755, answer)
         }
     }
 }
