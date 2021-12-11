@@ -7,21 +7,13 @@ class Day11(private val data: List<String>) : Puzzle<Int, Int>() {
     override fun solvePartOne(): Int {
         val grid = Grid(data)
         var total = 0
-        val toExplode = ArrayDeque<Coord>()
+        var toExplode : ArrayDeque<Coord>
         for (index in 1..100) {
-            toExplode.clear()
-            grid.increaseLevel(toExplode)
+            toExplode = grid.increaseLevel()
             while (toExplode.isNotEmpty()) {
                 val coord = toExplode.removeFirst()
                 total += 1
-                grid.explode(coord.l - 1, coord.c - 1, toExplode)
-                grid.explode(coord.l - 1, coord.c, toExplode)
-                grid.explode(coord.l - 1, coord.c + 1, toExplode)
-                grid.explode(coord.l, coord.c - 1, toExplode)
-                grid.explode(coord.l, coord.c + 1, toExplode)
-                grid.explode(coord.l + 1, coord.c - 1, toExplode)
-                grid.explode(coord.l + 1, coord.c, toExplode)
-                grid.explode(coord.l + 1, coord.c + 1, toExplode)
+                toExplode += grid.explodeAround(coord)
             }
         }
         return total
@@ -29,22 +21,14 @@ class Day11(private val data: List<String>) : Puzzle<Int, Int>() {
 
     override fun solvePartTwo(): Int {
         val grid = Grid(data)
-        val toExplode = ArrayDeque<Coord>()
+        var toExplode : ArrayDeque<Coord>
         var index = 0
         while (true) {
             index += 1
-            toExplode.clear()
-            grid.increaseLevel(toExplode)
+            toExplode = grid.increaseLevel()
             while (toExplode.isNotEmpty()) {
                 val coord = toExplode.removeFirst()
-                grid.explode(coord.l - 1, coord.c - 1, toExplode)
-                grid.explode(coord.l - 1, coord.c, toExplode)
-                grid.explode(coord.l - 1, coord.c + 1, toExplode)
-                grid.explode(coord.l, coord.c - 1, toExplode)
-                grid.explode(coord.l, coord.c + 1, toExplode)
-                grid.explode(coord.l + 1, coord.c - 1, toExplode)
-                grid.explode(coord.l + 1, coord.c, toExplode)
-                grid.explode(coord.l + 1, coord.c + 1, toExplode)
+                toExplode += grid.explodeAround(coord)
             }
             if (grid.isSynchro()) return index
         }
@@ -72,7 +56,8 @@ class Grid(data: List<String>) {
         return true
     }
 
-    fun increaseLevel(toExplode: ArrayDeque<Coord>) {
+    fun increaseLevel(): ArrayDeque<Coord> {
+        val toExplode = ArrayDeque<Coord>()
         for (l in 1..10) {
             for (c in 1..10) {
                 innerGrid[l][c] += 1
@@ -82,9 +67,24 @@ class Grid(data: List<String>) {
                 }
             }
         }
+        return toExplode
     }
 
-    fun explode(l: Int, c: Int, toExplode: ArrayDeque<Coord>) {
+    fun explodeAround(coord: Coord): ArrayDeque<Coord> {
+        val toExplode = ArrayDeque<Coord>()
+        toExplode += explode(coord.l - 1, coord.c - 1)
+        toExplode += explode(coord.l - 1, coord.c)
+        toExplode += explode(coord.l - 1, coord.c + 1)
+        toExplode += explode(coord.l, coord.c - 1)
+        toExplode += explode(coord.l, coord.c + 1)
+        toExplode += explode(coord.l + 1, coord.c - 1)
+        toExplode += explode(coord.l + 1, coord.c)
+        toExplode += explode(coord.l + 1, coord.c + 1)
+        return toExplode
+    }
+
+    private fun explode(l: Int, c: Int): ArrayDeque<Coord> {
+        val toExplode = ArrayDeque<Coord>()
         if (innerGrid[l][c] > 0) {
             innerGrid[l][c] += 1
             if (innerGrid[l][c] == 10) {
@@ -92,5 +92,6 @@ class Grid(data: List<String>) {
                 innerGrid[l][c] = 0
             }
         }
+        return toExplode
     }
 }
