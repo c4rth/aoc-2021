@@ -1,17 +1,22 @@
 package org.carth.aoc21.day13
 
 import org.carth.aoc21.common.Puzzle
+import java.lang.Integer.max
+
+typealias Grid = Array<BooleanArray>
 
 class Day13(private val data: List<String>) : Puzzle<Int, Int>() {
 
-    private fun readGridAndFolding(): Pair<List<BooleanArray>, List<Pair<String, Int>>> {
+    private fun readGridAndFolding(): Pair<Grid, List<Pair<String, Int>>> {
         val folding = mutableListOf<Pair<String, Int>>()
         val points = mutableListOf<Pair<Int, Int>>()
+        var max = (0 to 0)
         data.forEach { line ->
             if (line.isNotEmpty()) {
                 if (line.first().isDigit()) {
-                    val (strC, strL) = line.split(",")
-                    points.add(strL.toInt() to strC.toInt())
+                    val (c, l) = line.split(",").map { it.toInt() }
+                    max = (max(max.first, l) to max(max.second, c))
+                    points.add(l to c)
                 } else {
                     val (axis, position) = line.split("=")
                     if (axis.endsWith("y"))
@@ -21,82 +26,65 @@ class Day13(private val data: List<String>) : Puzzle<Int, Int>() {
                 }
             }
         }
-        var maxC = 0
-        var maxL = 0
-        points.forEach { point ->
-            maxL = Integer.max(maxL, point.first)
-            maxC = Integer.max(maxC, point.second)
-        }
-        if (maxC % 2 != 0) maxC += 1
-        if (maxL % 2 != 0) maxL += 1
-        val grid = List(maxL + 1) { BooleanArray(maxC + 1) { false } }
-        points.forEach { point ->
-            grid[point.first][point.second] = true
+        val grid = Array(max.first + max.first % 2 + 1) { BooleanArray(max.second + max.second % 2 + 1) }.also {
+            points.forEach { (l, c) ->
+                it[l][c] = true
+            }
         }
         return grid to folding
     }
 
-    override fun solvePartOne(): Int {
-        var (previousGrid, folding) = readGridAndFolding()
-        var newGrid: List<BooleanArray>
-        var total = 0
-        folding.first().also { (axis, _) ->
-            if (axis == "y") {
-                newGrid = List((previousGrid.size - 1) / 2) { BooleanArray(previousGrid[0].size) { false } }
-                newGrid.forEachIndexed { indexL, line ->
-                    line.forEachIndexed { indexC, _ ->
-                        newGrid[indexL][indexC] = previousGrid[indexL][indexC] || previousGrid[previousGrid.size - 1 - indexL][indexC]
-                    }
+    private fun Grid.foldOnX(): Grid =
+        Grid(this.size) { BooleanArray((this[0].size - 1) / 2) }.also {
+            it.forEachIndexed { indexL, line ->
+                line.forEachIndexed { indexC, _ ->
+                    it[indexL][indexC] = this[indexL][indexC] || this[indexL][this[0].size - 1 - indexC]
                 }
-
-            } else {
-                newGrid = List(previousGrid.size) { BooleanArray((previousGrid[0].size - 1) / 2) { false } }
-                newGrid.forEachIndexed { indexL, line ->
-                    line.forEachIndexed { indexC, _ ->
-                        newGrid[indexL][indexC] = previousGrid[indexL][indexC] || previousGrid[indexL][previousGrid[0].size - 1 - indexC]
-                    }
-                }
-            }
-            previousGrid = newGrid
-            previousGrid.forEach { line ->
-                total += line.filter { it }.size
             }
         }
-        return total
+
+    private fun Grid.foldOnY(): Grid =
+        Grid((this.size - 1) / 2) { BooleanArray(this[0].size) }.also {
+            it.forEachIndexed { indexL, line ->
+                line.forEachIndexed { indexC, _ ->
+                    it[indexL][indexC] = this[indexL][indexC] || this[this.size - 1 - indexL][indexC]
+                }
+            }
+        }
+
+    private fun Grid.dump(): String {
+        return StringBuilder().also { sb ->
+            this.forEach { line ->
+                line.forEach { b ->
+                    sb.append(if (b) "#" else " ")
+                }
+                sb.appendLine()
+            }
+        }.toString()
+    }
+
+    override fun solvePartOne(): Int {
+        var (grid, folding) = readGridAndFolding()
+        folding.first().also { (axis, _) ->
+            grid = if (axis == "x") {
+                grid.foldOnX()
+            } else {
+                grid.foldOnY()
+            }
+        }
+        return grid.sumOf { line -> line.count { it } }
     }
 
     override fun solvePartTwo(): Int {
-        var (previousGrid, folding) = readGridAndFolding()
-        var newGrid: List<BooleanArray>
+        var (grid, folding) = readGridAndFolding()
         folding.forEach { (axis, _) ->
-            if (axis == "y") {
-                newGrid = List((previousGrid.size - 1) / 2) { BooleanArray(previousGrid[0].size) { false } }
-                newGrid.forEachIndexed { indexL, line ->
-                    line.forEachIndexed { indexC, _ ->
-                        newGrid[indexL][indexC] = previousGrid[indexL][indexC] || previousGrid[previousGrid.size - 1 - indexL][indexC]
-                    }
-                }
-
+            grid = if (axis == "x") {
+                grid.foldOnX()
             } else {
-                newGrid = List(previousGrid.size) { BooleanArray((previousGrid[0].size - 1) / 2) { false } }
-                newGrid.forEachIndexed { indexL, line ->
-                    line.forEachIndexed { indexC, _ ->
-                        newGrid[indexL][indexC] = previousGrid[indexL][indexC] || previousGrid[indexL][previousGrid[0].size - 1 - indexC]
-                    }
-                }
+                grid.foldOnY()
             }
-            previousGrid = newGrid
         }
-        previousGrid.forEach { line ->
-            line.forEach { b ->
-                if (b) {
-                    print("#")
-                } else {
-                    print(" ")
-                }
-            }
-            println()
-        }
+        println(grid.dump())
         return 0
     }
 }
