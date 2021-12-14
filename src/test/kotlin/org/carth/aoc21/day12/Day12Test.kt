@@ -1,12 +1,15 @@
 package org.carth.aoc21.day12
 
-import org.carth.aoc21.common.Resources.resourceAsListOfString
+import org.carth.aoc21.common.Resources.inputAsListOfString
+import org.carth.aoc21.common.Resources.testInputAsListOfString
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
+
+private const val DAY = "day12"
 
 class Day12Tests {
 
@@ -18,7 +21,7 @@ class Day12Tests {
         @Order(1)
         fun `solve part one of sample 1`() {
             // Act
-            val answer = Day12(resourceAsListOfString("day12_a_test.txt")).solvePartOne()
+            val answer = Day12(testInputAsListOfString(DAY,"a")).solvePartOne()
 
             // Assert
             assertEquals(10, answer)
@@ -28,7 +31,7 @@ class Day12Tests {
         @Order(2)
         fun `solve part one of sample 2`() {
             // Act
-            val answer = Day12(resourceAsListOfString("day12_b_test.txt")).solvePartOne()
+            val answer = Day12(testInputAsListOfString(DAY, "b")).solvePartOne()
 
             // Assert
             assertEquals(19, answer)
@@ -38,7 +41,7 @@ class Day12Tests {
         @Order(3)
         fun `solve part one of sample 3`() {
             // Act
-            val answer = Day12(resourceAsListOfString("day12_c_test.txt")).solvePartOne()
+            val answer = Day12(testInputAsListOfString(DAY, "c")).solvePartOne()
 
             // Assert
             assertEquals(226, answer)
@@ -48,7 +51,7 @@ class Day12Tests {
         @Order(4)
         fun `solve part one`() {
             // Act
-            val answer = Day12(resourceAsListOfString("day12.txt")).solvePartOne()
+            val answer = Day12(inputAsListOfString(DAY)).solvePartOne()
 
             // Assert
             assertEquals(4749, answer)
@@ -63,7 +66,7 @@ class Day12Tests {
         @Order(1)
         fun `solve part two of sample 1`() {
             // Act
-            val answer = Day12(resourceAsListOfString("day12_a_test.txt")).solvePartTwo()
+            val answer = Day12(testInputAsListOfString(DAY, "a")).solvePartTwo()
 
             // Assert
             assertEquals(36, answer)
@@ -73,7 +76,7 @@ class Day12Tests {
         @Order(2)
         fun `solve part two of sample 2`() {
             // Act
-            val answer = Day12(resourceAsListOfString("day12_b_test.txt")).solvePartTwo()
+            val answer = Day12(testInputAsListOfString(DAY, "b")).solvePartTwo()
 
             // Assert
             assertEquals(103, answer)
@@ -83,7 +86,7 @@ class Day12Tests {
         @Order(3)
         fun `solve part two of sample 3`() {
             // Act
-            val answer = Day12(resourceAsListOfString("day12_c_test.txt")).solvePartTwo()
+            val answer = Day12(testInputAsListOfString(DAY, "C")).solvePartTwo()
 
             // Assert
             assertEquals(3509, answer)
@@ -93,7 +96,7 @@ class Day12Tests {
         @Order(4)
         fun `solve part two`() {
             // Act
-            val answer = Day12(resourceAsListOfString("day12.txt")).solvePartTwo()
+            val answer = Day12(inputAsListOfString(DAY)).solvePartTwo()
             // Assert
             assertEquals(123054, answer)
         }

@@ -1,12 +1,15 @@
 package org.carth.aoc21.day14
 
-import org.carth.aoc21.common.Resources.resourceAsListOfString
+import org.carth.aoc21.common.Resources.inputAsListOfString
+import org.carth.aoc21.common.Resources.testInputAsListOfString
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
+
+private const val DAY = "day14"
 
 class Day14Tests {
 
@@ -17,7 +20,7 @@ class Day14Tests {
         @Order(1)
         fun `solve part one of sample`() {
             // Act
-            val answer = Day14(resourceAsListOfString("day14_test.txt")).solvePartOne()
+            val answer = Day14(testInputAsListOfString(DAY)).solvePartOne()
 
             // Assert
             assertEquals(1588, answer)
@@ -28,7 +31,7 @@ class Day14Tests {
         fun `solve part one`() {
 
             // Act
-            val answer = Day14(resourceAsListOfString("day14.txt")).solvePartOne()
+            val answer = Day14(inputAsListOfString(DAY)).solvePartOne()
 
             // Assert
             assertEquals(2587, answer)
@@ -43,7 +46,7 @@ class Day14Tests {
         @Order(1)
         fun `solve part two of sample`() {
             // Act
-            val answer = Day14(resourceAsListOfString("day14_test.txt")).solvePartTwo()
+            val answer = Day14(testInputAsListOfString(DAY)).solvePartTwo()
 
             // Assert
             assertEquals(2188189693529, answer)
@@ -53,7 +56,7 @@ class Day14Tests {
         @Order(2)
         fun `solve part two`() {
             // Act
-            val answer = Day14(resourceAsListOfString("day14.txt")).solvePartTwo()
+            val answer = Day14(inputAsListOfString(DAY)).solvePartTwo()
             // Assert
             assertEquals(3318837563123, answer)
         }
