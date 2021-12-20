@@ -1,6 +1,25 @@
 package org.carth.aoc21.day20
 
 import org.carth.aoc21.common.Puzzle
+import org.carth.aoc21.common.Resources
+import kotlin.system.measureTimeMillis
+
+fun main() {
+    val ms = measureTimeMillis {
+        var input = Resources.testInputAsListOfString("day20")
+        println(Day20(input).solvePartOne())
+
+        input = Resources.inputAsListOfString("day20")
+        println(Day20(input).solvePartOne())
+
+        var input2 = Resources.testInputAsListOfString("day20")
+        println(Day20(input2).solvePartTwo())
+
+        input2 = Resources.inputAsListOfString("day20")
+        println(Day20(input2).solvePartTwo())
+    }
+    println("ms : $ms")
+}
 
 class Day20(private val data: List<String>) : Puzzle<Int, Int>() {
     override fun solvePartOne(): Int {
@@ -12,30 +31,33 @@ class Day20(private val data: List<String>) : Puzzle<Int, Int>() {
     }
 
     private fun solve(times: Int): Int {
-        var (algo, image) = parse()
+        var (algorithm, image) = parse()
         var default = 0
+        val isInfiniteFlashing = algorithm[0] == 1
         repeat(times) {
             val nextImage = HashMap<Pair<Int, Int>, Int>()
             image.keys.forEach { (l, c) ->
                 for (il in -1..1) {
                     for (ic in -1..1) {
                         val valBin = getBinary(image, l + il, c + ic, default)
-                        nextImage[(l + il) to (c + ic)] = algo[valBin]
+                        nextImage[(l + il) to (c + ic)] = algorithm[valBin]
                     }
                 }
             }
-            default = if (default == 0) algo[0] else algo.last()
+            default = if (isInfiniteFlashing && default == 0) 1 else 0
             image = nextImage
         }
         return image.values.sum()
     }
 
     private fun getBinary(image: MutableMap<Pair<Int, Int>, Int>, l: Int, c: Int, default: Int): Int {
-        return listOf(
-            l - 1 to c - 1, l - 1 to c, l - 1 to c + 1,
-            l to c - 1, l to c, l to c + 1,
-            l + 1 to c - 1, l + 1 to c, l + 1 to c + 1
-        ).fold(0) { acc, i -> acc * 2 + image.getOrDefault(i,default) }
+        var acc = 0
+        for (il in -1..1) {
+            for (ic in -1..1) {
+                acc = acc * 2 + image.getOrDefault((l + il to c + ic), default)
+            }
+        }
+        return acc
     }
 
     private fun parse(): Pair<Array<Int>, MutableMap<Pair<Int, Int>, Int>> {
