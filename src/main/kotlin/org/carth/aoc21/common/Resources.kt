@@ -17,8 +17,8 @@ internal object Resources {
     fun inputAsString(day: String): String =
         File("$day/input.txt".toURI()).readLines().first()
 
-    fun inputAsListOfString(day: String): List<String> =
-        File("$day/input.txt".toURI()).readLines()
+    fun inputAsListOfString(day: String, suffix: String = ""): List<String> =
+        File("$day/input$suffix.txt".toURI()).readLines()
 
     fun inputAsListOfInt(day: String): List<Int> =
         inputAsListOfString(day).map { it.toInt() }
