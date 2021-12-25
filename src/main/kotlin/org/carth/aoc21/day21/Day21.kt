@@ -1,29 +1,11 @@
 package org.carth.aoc21.day21
 
 import org.carth.aoc21.common.Puzzle
-import org.carth.aoc21.common.Resources
 import java.lang.Long.max
 import java.lang.Long.min
-import kotlin.system.measureTimeMillis
 
-
-fun main() {
-
-    val ms = measureTimeMillis {
-        val answer1 = Day21(Resources.testInputAsListOfString("day21")).solvePartOne()
-        println(answer1)
-//
-//        val answer2 = Day21(Resources.inputAsListOfString("day21")).solvePartOne()
-//        println(answer2)
-
-        val answer3 = Day21(Resources.testInputAsListOfString("day21")).solvePartTwo()
-        println(answer3)
-//
-//        val answer4 = Day21(Resources.inputAsListOfString("day21")).solvePartTwo()
-//        println(answer4)
-
-    }
-    println("ms : $ms")
+object Constant {
+    val diceRolls = mapOf(3 to 1, 4 to 3, 5 to 6, 6 to 7, 7 to 6, 8 to 3, 9 to 1)
 }
 
 class Day21(private val data: List<String>) : Puzzle<Long, Long>() {
@@ -49,7 +31,7 @@ class Day21(private val data: List<String>) : Puzzle<Long, Long>() {
         return dice.rolled() * min(player1.score, player2.score)
     }
 
-
+    // Not my solution
     override fun solvePartTwo(): Long {
         val position1 = readPosition(data[0])
         val position2 = readPosition(data[1])
@@ -58,14 +40,13 @@ class Day21(private val data: List<String>) : Puzzle<Long, Long>() {
         return max(winPlayer1, winPlayer2)
     }
 
-    private val diceRolls = mapOf(3 to 1, 4 to 3, 5 to 6, 6 to 7, 7 to 6, 8 to 3, 9 to 1)
 
     private fun solve(cache: MutableMap<Int, Pair<Long, Long>>, position1: Int, score1: Int, position2: Int, score2: Int): Pair<Long, Long> {
         val hash = position1 + 10 * score1 + 1000 * position2 + 10000 * score2
         if (!cache.containsKey(hash)) {
             var winPlayer1 = 0L
             var winPlayer2 = 0L
-            for ((dice, mult) in diceRolls) {
+            for ((dice, mult) in Constant.diceRolls) {
                 val play = (position1 + dice - 1) % 10 + 1
                 if (score1 + play < 21) {
                     val (winPlayer2b, winPlayer1b) = solve(cache, position2, score2, play, score1 + play)
